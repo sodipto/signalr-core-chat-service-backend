@@ -20,8 +20,11 @@
 	</ItemGroup>
 	
   <ItemGroup>
-    <Folder Include="Mappings\" />
     <Folder Include="Repository\" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\ChatApp.Core.Domain\ChatApp.Core.Domain.csproj" />
   </ItemGroup>
 
 </Project>
