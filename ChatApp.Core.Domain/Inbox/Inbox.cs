@@ -9,7 +9,10 @@ namespace ChatApp.Core.Domain
     public class Inbox : BaseDomain
     {
         public Guid OwnerID { get; set; }
+        public User Owner { get; set; }
         public Guid ReceiverID { get; set; }
+        public User Receiver { get; set; }
+
         public bool OwnerDeleted { get; set; }
         public bool ReceiverDeleted { get; set; }
     }

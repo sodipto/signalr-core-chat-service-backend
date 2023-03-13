@@ -11,7 +11,7 @@ namespace ChatApp.Core.Domain
     {
         public Guid InboxID { get; set; }
         public virtual Inbox Inbox { get; set; }
-        public string TextMessage { get; set; }
+        public string Content { get; set; }
         public Guid SenderID { get; set; }
         public virtual User Sender { get; set; }
         public bool SenderDeleted { get; set; }
