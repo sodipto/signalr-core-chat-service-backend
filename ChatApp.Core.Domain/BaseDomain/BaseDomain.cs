@@ -14,5 +14,4 @@ namespace ChatApp.Core.Domain
         public Guid? UpdatedByID { get; set; }
         public bool Deleted { get; set; } = false;
     }
-
 }
