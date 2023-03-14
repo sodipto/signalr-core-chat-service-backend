@@ -33,11 +33,6 @@ namespace ChatApp.Core.Data
             return await _dbContext.Connection.QuerySingleAsync<T>(sql, param, transaction);
         }
 
-        public async Task<GridReader> QueryMultipleAsync(string sql, object param = null, IDbTransaction transaction = null)
-        {
-            return await _dbContext.Connection.QueryMultipleAsync(sql, param, transaction);
-        }
-
         public async Task<int> ExecuteAsync(string sql, object param = null, IDbTransaction transaction = null)
         {
             return await _dbContext.Connection.ExecuteAsync(sql, param, transaction);
