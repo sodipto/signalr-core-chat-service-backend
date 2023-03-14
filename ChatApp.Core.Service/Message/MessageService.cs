@@ -4,6 +4,7 @@ using ChatApp.Core.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -72,6 +73,40 @@ namespace ChatApp.Core.Service
                 $" VALUES ('{message.ID}', '{message.InboxID}', '{message.Content}', '{message.SenderID}', False, False, False, False, NOW(), NOW(), False)";
 
             int affectedRow = await _repository.ExecuteAsync(sql);
+
+            return affectedRow;
+        }
+
+        public async Task<int> DeleteMessage(Guid messageID, Guid userID)
+        {
+            string sql = $"UPDATE messages SET \"SenderDeleted\"= CASE WHEN \"SenderID\"=@userID " +
+                $"THEN TRUE ELSE \"SenderDeleted\" END, \"ReceiverDeleted\"= CASE WHEN \"SenderID\"!=@userID" +
+                $" THEN TRUE ELSE \"ReceiverDeleted\" END,\"UpdatedAt\"=NOW() WHERE \"ID\"=@messageID AND " +
+                $" \"Deleted\"= FALSE AND (\"SenderDeleted\"= FALSE OR \"ReceiverDeleted\"= FALSE)";
+
+            int affectedRow = await _repository.ExecuteAsync(sql, new { messageID, userID });
+
+            return affectedRow;
+        }
+
+        public async Task<int> DeleteInbox(Guid inboxID, Guid userID)
+        {
+            string sql = $"UPDATE inbox SET \"OwnerDeleted\"= CASE WHEN \"OwnerID\"=@userID THEN TRUE " +
+                $"ELSE \"OwnerDeleted\" END,\"ReceiverDeleted\"= CASE WHEN \"ReceiverID\"=@userID THEN TRUE" +
+                $" ELSE \"ReceiverDeleted\" END,\"UpdatedAt\"= NOW()\r\nWHERE \"ID\"=@inboxID AND \"Deleted\"= FALSE" +
+                $" AND (\"OwnerDeleted\"= FALSE OR \"ReceiverDeleted\"= FALSE)";
+
+            int affectedRow = await _repository.ExecuteAsync(sql, new { inboxID, userID });
+
+            return affectedRow;
+        }
+
+        public async Task<int> MessagesMarkAsRead(Guid inboxID, Guid userID)
+        {
+            string sql = $"UPDATE messages SET \"SeenStatus\"=true,\"UpdatedAt\"=NOW() WHERE" +
+                $" \"InboxID\"=@inboxID AND \"SenderID\"!=@userID AND \"SeenStatus\"=false AND \"Deleted\"=FALSE ";
+
+            int affectedRow = await _repository.ExecuteAsync(sql, new { inboxID, userID });
 
             return affectedRow;
         }

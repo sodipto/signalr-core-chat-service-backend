@@ -10,8 +10,13 @@ namespace ChatApp.Core.Service
     public interface IMessageService
     {
         Task<List<dynamic>> GetChatList(Guid userID, int offset = 0, int pageSize = 20);
-        Task<List<dynamic>> GetChatMessages(string inboxID, int offset = 0, int pageSize = 20);
+        Task<List<dynamic>> GetChatMessages(string inboxID, Guid userID, int offset = 0, int pageSize = 20);
+
         Task<int> SaveInbox(Inbox inbox);
         Task<int> SaveMessage(Message message);
+        Task<int> MessagesMarkAsRead(Guid inboxID, Guid userID);
+
+        Task<int> DeleteMessage(Guid messageID, Guid userID);
+        Task<int> DeleteInbox(Guid inboxID, Guid userID);
     }
 }

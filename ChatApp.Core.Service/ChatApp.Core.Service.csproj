@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ChatApp.Core.Data\ChatApp.Core.Data.csproj" />
+  </ItemGroup>
+
 </Project>
