@@ -12,7 +12,6 @@ namespace ChatApp.Core.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        private IHttpContextAccessor _httpContextAccessor;
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public IDbConnection Connection => Database.GetDbConnection();
 
