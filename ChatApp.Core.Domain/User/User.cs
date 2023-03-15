@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChatApp.Core.Domain
 {
-    [Table("Users")]
+   // [Table("Users")]
     public class User : BaseDomain
     {
         public string FullName { get; set; }

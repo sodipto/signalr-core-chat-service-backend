@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ChatApp.Core.Domain
 {
-    [Table("Messages")]
+    //[Table("Messages")]
     public class Message : BaseDomain
     {
         public Guid InboxID { get; set; }

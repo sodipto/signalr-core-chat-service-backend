@@ -1,4 +1,5 @@
 ﻿using ChatApp.Core.Domain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace ChatApp.Core.Data
     {
         public override void Configure(EntityTypeBuilder<Inbox> builder)
         {
+            builder.ToTable("Inboxes");
             builder.HasKey(x => x.ID);
             builder.Property(x => x.OwnerID).IsRequired();
             builder.Property(x => x.ReceiverID).IsRequired();
