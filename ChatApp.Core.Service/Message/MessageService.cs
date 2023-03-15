@@ -18,6 +18,16 @@ namespace ChatApp.Core.Service
             _repository = repository;
         }
 
+        public async Task<Inbox> GetInbox(Guid senderID, Guid receiverID)
+        {
+            string sql = $"SELECT *FROM \"inbox\" WHERE (\"OwnerID\"=@senderID AND \"ReceiverID\"=@receiverID)" +
+                $" OR (\"OwnerID\"=@receiverID AND \"ReceiverID\"=@senderID)";
+
+            var inbox = await _repository.QueryFirstOrDefaultAsync<Inbox>(sql, new { senderID, receiverID });
+
+            return inbox;
+        }
+
         public async Task<List<dynamic>> GetChatList(Guid userID, int offset = 0, int pageSize = 20)
         {
             string sql = $"SELECT COUNT(*) over() AS \"TotalCount\",chat.\"InboxID\",CASE WHEN chat.\"OwnerID\"=@userID" +
@@ -45,7 +55,7 @@ namespace ChatApp.Core.Service
             string sql = $"SELECT COUNT(*) over() AS \"TotalCount\",chat.\"ID\" AS \"MessageID\",chat.\"SenderID\"," +
                 $"u.\"FullName\" AS \"SenderName\",u.\"ProfileImageSrc\" AS \"SenderProfileImageSrc\",chat.\"Content\"," +
                 $"chat.\"SeenStatus\",chat.\"UpdatedAt\" AS \"SeenDateTime\",chat.\"DeliveredStatus\",chat.\"CreatedAt\"" +
-                $" AS \"SentDateTime\" FROM messages chat INNER JOIN \"users\" u ON u.\"ID\"=chat.\"SenderID\" " +
+                $" AS \"SentDateTime\" FROM \"messages\" chat INNER JOIN \"users\" u ON u.\"ID\"=chat.\"SenderID\" " +
                 $"WHERE chat.\"InboxID\"=@inboxID AND chat.\"Deleted\"= FALSE AND (CASE WHEN chat.\"SenderID\"=@userID" +
                 $" AND chat.\"SenderDeleted\"= TRUE THEN 1 WHEN chat.\"SenderID\"!=@userID AND chat.\"ReceiverDeleted\"= TRUE THEN 1" +
                 $" ELSE 0 END) = 0 ORDER BY chat.\"CreatedAt\" DESC OFFSET @ OFFSET LIMIT @pageSize";
@@ -68,7 +78,7 @@ namespace ChatApp.Core.Service
 
         public async Task<int> SaveMessage(Message message)
         {
-            string sql = $"INSERT INTO messages (\"ID\", \"InboxID\", \"Content\", \"SenderID\", \"SenderDeleted\"," +
+            string sql = $"INSERT INTO \"messages\" (\"ID\", \"InboxID\", \"Content\", \"SenderID\", \"SenderDeleted\"," +
                 $" \"ReceiverDeleted\", \"SeenStatus\", \"DeliveredStatus\", \"CreatedAt\", \"UpdatedAt\", \"Deleted\")" +
                 $" VALUES ('{message.ID}', '{message.InboxID}', '{message.Content}', '{message.SenderID}', False, False, False, False, NOW(), NOW(), False)";
 
@@ -79,7 +89,7 @@ namespace ChatApp.Core.Service
 
         public async Task<int> DeleteMessage(Guid messageID, Guid userID)
         {
-            string sql = $"UPDATE messages SET \"SenderDeleted\"= CASE WHEN \"SenderID\"=@userID " +
+            string sql = $"UPDATE \"messages\" SET \"SenderDeleted\"= CASE WHEN \"SenderID\"=@userID " +
                 $"THEN TRUE ELSE \"SenderDeleted\" END, \"ReceiverDeleted\"= CASE WHEN \"SenderID\"!=@userID" +
                 $" THEN TRUE ELSE \"ReceiverDeleted\" END,\"UpdatedAt\"=NOW() WHERE \"ID\"=@messageID AND " +
                 $" \"Deleted\"= FALSE AND (\"SenderDeleted\"= FALSE OR \"ReceiverDeleted\"= FALSE)";
@@ -91,9 +101,9 @@ namespace ChatApp.Core.Service
 
         public async Task<int> DeleteInbox(Guid inboxID, Guid userID)
         {
-            string sql = $"UPDATE inbox SET \"OwnerDeleted\"= CASE WHEN \"OwnerID\"=@userID THEN TRUE " +
+            string sql = $"UPDATE \"inbox\" SET \"OwnerDeleted\"= CASE WHEN \"OwnerID\"=@userID THEN TRUE " +
                 $"ELSE \"OwnerDeleted\" END,\"ReceiverDeleted\"= CASE WHEN \"ReceiverID\"=@userID THEN TRUE" +
-                $" ELSE \"ReceiverDeleted\" END,\"UpdatedAt\"= NOW()\r\nWHERE \"ID\"=@inboxID AND \"Deleted\"= FALSE" +
+                $" ELSE \"ReceiverDeleted\" END,\"UpdatedAt\"= NOW() WHERE \"ID\"=@inboxID AND \"Deleted\"= FALSE" +
                 $" AND (\"OwnerDeleted\"= FALSE OR \"ReceiverDeleted\"= FALSE)";
 
             int affectedRow = await _repository.ExecuteAsync(sql, new { inboxID, userID });
@@ -103,7 +113,7 @@ namespace ChatApp.Core.Service
 
         public async Task<int> MessagesMarkAsRead(Guid inboxID, Guid userID)
         {
-            string sql = $"UPDATE messages SET \"SeenStatus\"=true,\"UpdatedAt\"=NOW() WHERE" +
+            string sql = $"UPDATE \"messages\" SET \"SeenStatus\"=true,\"UpdatedAt\"=NOW() WHERE" +
                 $" \"InboxID\"=@inboxID AND \"SenderID\"!=@userID AND \"SeenStatus\"=false AND \"Deleted\"=FALSE ";
 
             int affectedRow = await _repository.ExecuteAsync(sql, new { inboxID, userID });

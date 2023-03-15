@@ -9,6 +9,7 @@ namespace ChatApp.Core.Service
 {
     public interface IMessageService
     {
+        Task<Inbox> GetInbox(Guid senderID, Guid receiverID);
         Task<List<dynamic>> GetChatList(Guid userID, int offset = 0, int pageSize = 20);
         Task<List<dynamic>> GetChatMessages(string inboxID, Guid userID, int offset = 0, int pageSize = 20);
 
