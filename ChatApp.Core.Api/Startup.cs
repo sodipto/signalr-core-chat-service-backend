@@ -184,11 +184,11 @@ namespace ChatApp.Core.Api
             #endregion
 
             #region Swagger
-            if (env.IsDevelopment() || env.IsStaging() || env.IsProduction())
+            if (env.IsDevelopment() || env.IsStaging())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Avijatrik.Api v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChatApp.Core.Api v1"));
             }
             #endregion
 
