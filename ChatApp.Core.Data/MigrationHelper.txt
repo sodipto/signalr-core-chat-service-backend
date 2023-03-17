@@ -1,0 +1,18 @@
+﻿Add
+dotnet ef migrations add MigrationName -s ChatApp.Core.Api -p ChatApp.Core.Data
+
+
+Update (No need to execute this,because automigration enable)
+dotnet ef database update -s ChatApp.Core.Api -p ChatApp.Core.Data
+
+Remove
+dotnet ef migrations remove -s ChatApp.Core.Api -p ChatApp.Core.Data
+
+UpdateMigration
+dotnet ef database update MigrationName -s ChatApp.Core.Api -p ChatApp.Core.Data
+
+//For column rename and drop column use this inside migration
+For rename
+migrationBuilder.Sql("ALTER TABLE tablename CHANGE oldcolumnname newcolumnname data_type;");
+Example:
+migrationBuilder.Sql("ALTER TABLE StaticData CHANGE `value2` `value3` VARCHAR(225);");
