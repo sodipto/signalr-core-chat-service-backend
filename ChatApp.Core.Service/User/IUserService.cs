@@ -11,7 +11,7 @@ namespace ChatApp.Core.Service
     {
         Task<bool> IsEmailExist(string email);
         Task<User> GetUserById(Guid userID);
-        Task<User> GetUserByEmail(string email);
+        Task<User> GetUser(string email, string password);
 
         Task<int> Save(User user);
         Task<int> Update(Guid userID, string fullName, string profileImageSrc);

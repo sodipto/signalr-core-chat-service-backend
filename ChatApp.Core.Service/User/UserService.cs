@@ -34,9 +34,10 @@ namespace ChatApp.Core.Service
             return user;
         }
 
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<User> GetUser(string email, string password)
         {
-            string sql = $"SELECT *FROM \"Users\" WHERE \"Email\"=@email AND \"Deleted\"=false";
+            string sql = $"SELECT *FROM \"Users\" WHERE \"Email\"=@email AND \"Password\"='{password}' AND " +
+                $"\"Deleted\"=false";
 
             var user = await _repository.QueryFirstOrDefaultAsync<User>(sql, new { email });
 
