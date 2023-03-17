@@ -38,8 +38,8 @@ namespace ChatApp.Core.Service
                 $" AS \"LastMessageSenderID\",chat.\"Content\", chat.\"SeenStatus\",chat.\"DeliveredStatus\",chat.\"SentDateTime\" FROM (SELECT DISTINCT" +
                 $" ON(i.\"ID\")*,inboxowner.\"FullName\" AS \"InboxOwnerFullName\",inboxowner.\"ProfileImageSrc\" AS \"InboxOwnerProfileImageSrc\"," +
                 $"inboxreceipent.\"FullName\" AS \"InboxReceipentFullName\",inboxreceipent.\"ProfileImageSrc\" AS \"InboxReceipentProfileImageSrc\"," +
-                $"i.\"CreatedAt\" AS \"SentDateTime\" FROM \"inbox\" i INNER JOIN \"messages\" m ON i.\"ID\"=m.\"InboxID\" INNER JOIN \"users\" inboxowner" +
-                $" ON inboxowner.\"ID\"=i.\"OwnerID\" INNER JOIN \"users\" inboxreceipent ON inboxreceipent.\"ID\"=i.\"ReceiverID\" WHERE i.\"Deleted\"= FALSE AND m.\"Deleted\"= FALSE" +
+                $"i.\"CreatedAt\" AS \"SentDateTime\" FROM \"Inboxes\" i INNER JOIN \"Messages\" m ON i.\"ID\"=m.\"InboxID\" INNER JOIN \"Users\" inboxowner" +
+                $" ON inboxowner.\"ID\"=i.\"OwnerID\" INNER JOIN \"Users\" inboxreceipent ON inboxreceipent.\"ID\"=i.\"ReceiverID\" WHERE i.\"Deleted\"= FALSE AND m.\"Deleted\"= FALSE" +
                 $" AND (i.\"OwnerID\"=@userID OR i.\"ReceiverID\"=@userID) AND ( CASE WHEN i.\"ReceiverID\"=@userID AND i.\"ReceiverDeleted\"=true THEN 1 " +
                 $"WHEN i.\"OwnerID\"=@userID AND i.\"OwnerDeleted\"=true THEN 1 WHEN m.\"SenderID\"=@userID AND m.\"SenderDeleted\"=TRUE THEN 1 " +
                 $"WHEN m.\"SenderID\"!=@userID AND m.\"ReceiverDeleted\"=TRUE THEN 1 ELSE 0 END) = 0 ORDER BY i.\"ID\",m.\"CreatedAt\" Desc) chat " +
@@ -55,7 +55,7 @@ namespace ChatApp.Core.Service
             string sql = $"SELECT COUNT(*) over() AS \"TotalCount\",chat.\"ID\" AS \"MessageID\",chat.\"SenderID\"," +
                 $"u.\"FullName\" AS \"SenderName\",u.\"ProfileImageSrc\" AS \"SenderProfileImageSrc\",chat.\"Content\"," +
                 $"chat.\"SeenStatus\",chat.\"UpdatedAt\" AS \"SeenDateTime\",chat.\"DeliveredStatus\",chat.\"CreatedAt\"" +
-                $" AS \"SentDateTime\" FROM \"messages\" chat INNER JOIN \"users\" u ON u.\"ID\"=chat.\"SenderID\" " +
+                $" AS \"SentDateTime\" FROM \"Messages\" chat INNER JOIN \"Users\" u ON u.\"ID\"=chat.\"SenderID\" " +
                 $"WHERE chat.\"InboxID\"=@inboxID AND chat.\"Deleted\"= FALSE AND (CASE WHEN chat.\"SenderID\"=@userID" +
                 $" AND chat.\"SenderDeleted\"= TRUE THEN 1 WHEN chat.\"SenderID\"!=@userID AND chat.\"ReceiverDeleted\"= TRUE THEN 1" +
                 $" ELSE 0 END) = 0 ORDER BY chat.\"CreatedAt\" DESC OFFSET @ OFFSET LIMIT @pageSize";
@@ -67,7 +67,7 @@ namespace ChatApp.Core.Service
 
         public async Task<int> SaveInbox(Inbox inbox)
         {
-            string sql = $"INSERT INTO inbox (\"ID\", \"OwnerID\", \"ReceiverID\", \"OwnerDeleted\"," +
+            string sql = $"INSERT INTO \"Inboxes\" (\"ID\", \"OwnerID\", \"ReceiverID\", \"OwnerDeleted\"," +
                 $" \"ReceiverDeleted\", \"CreatedAt\", \"UpdatedAt\", \"Deleted\") " +
                 $"VALUES ('{inbox.ID}', '{inbox.OwnerID}', '{inbox.ReceiverID}', False, False, NOW(), NOW(), False)";
 
@@ -78,7 +78,7 @@ namespace ChatApp.Core.Service
 
         public async Task<int> SaveMessage(Message message)
         {
-            string sql = $"INSERT INTO \"messages\" (\"ID\", \"InboxID\", \"Content\", \"SenderID\", \"SenderDeleted\"," +
+            string sql = $"INSERT INTO \"Messages\" (\"ID\", \"InboxID\", \"Content\", \"SenderID\", \"SenderDeleted\"," +
                 $" \"ReceiverDeleted\", \"SeenStatus\", \"DeliveredStatus\", \"CreatedAt\", \"UpdatedAt\", \"Deleted\")" +
                 $" VALUES ('{message.ID}', '{message.InboxID}', '{message.Content}', '{message.SenderID}', False, False, False, False, NOW(), NOW(), False)";
 
@@ -89,7 +89,7 @@ namespace ChatApp.Core.Service
 
         public async Task<int> DeleteMessage(Guid messageID, Guid userID)
         {
-            string sql = $"UPDATE \"messages\" SET \"SenderDeleted\"= CASE WHEN \"SenderID\"=@userID " +
+            string sql = $"UPDATE \"Messages\" SET \"SenderDeleted\"= CASE WHEN \"SenderID\"=@userID " +
                 $"THEN TRUE ELSE \"SenderDeleted\" END, \"ReceiverDeleted\"= CASE WHEN \"SenderID\"!=@userID" +
                 $" THEN TRUE ELSE \"ReceiverDeleted\" END,\"UpdatedAt\"=NOW() WHERE \"ID\"=@messageID AND " +
                 $" \"Deleted\"= FALSE AND (\"SenderDeleted\"= FALSE OR \"ReceiverDeleted\"= FALSE)";
@@ -101,7 +101,7 @@ namespace ChatApp.Core.Service
 
         public async Task<int> DeleteInbox(Guid inboxID, Guid userID)
         {
-            string sql = $"UPDATE \"inbox\" SET \"OwnerDeleted\"= CASE WHEN \"OwnerID\"=@userID THEN TRUE " +
+            string sql = $"UPDATE \"Inboxes\" SET \"OwnerDeleted\"= CASE WHEN \"OwnerID\"=@userID THEN TRUE " +
                 $"ELSE \"OwnerDeleted\" END,\"ReceiverDeleted\"= CASE WHEN \"ReceiverID\"=@userID THEN TRUE" +
                 $" ELSE \"ReceiverDeleted\" END,\"UpdatedAt\"= NOW() WHERE \"ID\"=@inboxID AND \"Deleted\"= FALSE" +
                 $" AND (\"OwnerDeleted\"= FALSE OR \"ReceiverDeleted\"= FALSE)";
@@ -113,7 +113,7 @@ namespace ChatApp.Core.Service
 
         public async Task<int> MessagesMarkAsRead(Guid inboxID, Guid userID)
         {
-            string sql = $"UPDATE \"messages\" SET \"SeenStatus\"=true,\"UpdatedAt\"=NOW() WHERE" +
+            string sql = $"UPDATE \"Messages\" SET \"SeenStatus\"=true,\"UpdatedAt\"=NOW() WHERE" +
                 $" \"InboxID\"=@inboxID AND \"SenderID\"!=@userID AND \"SeenStatus\"=false AND \"Deleted\"=FALSE ";
 
             int affectedRow = await _repository.ExecuteAsync(sql, new { inboxID, userID });

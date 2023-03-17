@@ -10,7 +10,7 @@ namespace ChatApp.Core.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "users",
+                name: "Users",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uuid", nullable: false),
@@ -18,14 +18,14 @@ namespace ChatApp.Core.Data.Migrations
                     ProfileImageSrc = table.Column<string>(type: "text", nullable: true),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedByID = table.Column<Guid>(type: "uuid", nullable: true),
                     Deleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_users", x => x.ID);
+                    table.PrimaryKey("PK_Users", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -37,8 +37,8 @@ namespace ChatApp.Core.Data.Migrations
                     ReceiverID = table.Column<Guid>(type: "uuid", nullable: false),
                     OwnerDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     ReceiverDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedByID = table.Column<Guid>(type: "uuid", nullable: true),
                     Deleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -46,15 +46,15 @@ namespace ChatApp.Core.Data.Migrations
                 {
                     table.PrimaryKey("PK_Inboxes", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Inboxes_users_OwnerID",
+                        name: "FK_Inboxes_Users_OwnerID",
                         column: x => x.OwnerID,
-                        principalTable: "users",
+                        principalTable: "Users",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Inboxes_users_ReceiverID",
+                        name: "FK_Inboxes_Users_ReceiverID",
                         column: x => x.ReceiverID,
-                        principalTable: "users",
+                        principalTable: "Users",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -71,8 +71,8 @@ namespace ChatApp.Core.Data.Migrations
                     ReceiverDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     SeenStatus = table.Column<bool>(type: "boolean", nullable: false),
                     DeliveredStatus = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedByID = table.Column<Guid>(type: "uuid", nullable: true),
                     Deleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -86,9 +86,9 @@ namespace ChatApp.Core.Data.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Messages_users_SenderID",
+                        name: "FK_Messages_Users_SenderID",
                         column: x => x.SenderID,
-                        principalTable: "users",
+                        principalTable: "Users",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -123,7 +123,7 @@ namespace ChatApp.Core.Data.Migrations
                 name: "Inboxes");
 
             migrationBuilder.DropTable(
-                name: "users");
+                name: "Users");
         }
     }
 }
