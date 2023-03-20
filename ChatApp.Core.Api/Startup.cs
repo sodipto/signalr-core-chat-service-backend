@@ -1,4 +1,5 @@
 using ChatApp.Core.Data;
+using ChatApp.Core.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -83,6 +84,13 @@ namespace ChatApp.Core.Api
                     ClockSkew = TimeSpan.Zero
                 };
             });
+            #endregion
+
+            #region Dependancy Injection
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IDapperRepositiory, DapperRepositiory>();
+
             #endregion
 
             #region Swagger

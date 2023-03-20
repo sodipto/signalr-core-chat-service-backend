@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace ChatApp.Core.Utils.DTOs
 {
-    public class TokenDTO
+    public class AuthDTO
     {
-        public string Type { get; } = "Bearer";
-        public long ExpiredIn { get; set; }
-        public string AccessToken { get; set; }
-
+        public TokenDTO Token { get; set; }
+        public UserDTO User { get; set; }
     }
 }
