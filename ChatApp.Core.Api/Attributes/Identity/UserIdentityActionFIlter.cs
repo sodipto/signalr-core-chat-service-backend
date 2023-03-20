@@ -12,7 +12,7 @@ namespace ChatApp.Core.Api.Attributes
         {
             var controller = context.Controller as BaseController;
             var userIDClaim = context.HttpContext?.User?.Claims?.FirstOrDefault(s => s.Type == "UserID")?.Value;
-            var userEmailClaim = context.HttpContext?.User?.Claims?.FirstOrDefault(s => s.Type == "CurrentUserEmail")?.Value;
+            var userEmailClaim = context.HttpContext?.User?.Claims?.FirstOrDefault(s => s.Type == "Email")?.Value;
 
             if (!string.IsNullOrEmpty(userIDClaim))
             {

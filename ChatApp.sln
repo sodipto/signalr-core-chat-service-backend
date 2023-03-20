@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatApp.Core.Data", "ChatAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatApp.Core.Service", "ChatApp.Core.Service\ChatApp.Core.Service.csproj", "{DAD2841F-E865-4863-B666-CEDE7B512898}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatApp.Core.Api", "ChatApp.Core.Api\ChatApp.Core.Api.csproj", "{BBADA160-180D-4144-8026-B509F21E50FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatApp.Core.Api", "ChatApp.Core.Api\ChatApp.Core.Api.csproj", "{BBADA160-180D-4144-8026-B509F21E50FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatApp.Core.Utils", "ChatApp.Core.Utils\ChatApp.Core.Utils.csproj", "{D17272DE-D528-408A-B93C-24046DD8ADFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{BBADA160-180D-4144-8026-B509F21E50FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBADA160-180D-4144-8026-B509F21E50FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBADA160-180D-4144-8026-B509F21E50FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D17272DE-D528-408A-B93C-24046DD8ADFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D17272DE-D528-408A-B93C-24046DD8ADFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D17272DE-D528-408A-B93C-24046DD8ADFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D17272DE-D528-408A-B93C-24046DD8ADFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
