@@ -39,7 +39,7 @@ namespace ChatApp.Core.DTOBuilders
             var dto = new TokenDTO()
             {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
-                ExpiredIn = new DateTimeOffset(expiredIn).ToUnixTimeMilliseconds()
+                ExpiredAt = new DateTimeOffset(expiredIn).ToUnixTimeMilliseconds()
             };
 
             return dto;

@@ -13,7 +13,6 @@ namespace ChatApp.Core.Api
     {
         public static void Main(string[] args)
         {
-            ;
             try
             {
                 //Log.Information("Starting service...");
